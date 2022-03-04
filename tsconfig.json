@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
+    "module": "commonjs",
+    "target": "es2021",
+    "outDir": "./dist",
+    "declaration": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"],
+  "ts-node": {
+    "transpileOnly": true
+  }
+}
