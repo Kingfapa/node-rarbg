@@ -9,10 +9,35 @@ interface IBaseParams {
   minimum_seeders?: number;
   minimum_leechers?: number;
 }
-
-interface ISearchParams extends IBaseParams {
+interface ISearchString extends IBaseParams {
   search_string: string;
+  search_imdb?: never;
+  search_tvdb?: never;
+  search_themoviedb?: never;
 }
+
+interface ISearchIMDB extends IBaseParams {
+  search_string?: never;
+  search_imdb: string;
+  search_tvdb?: never;
+  search_themoviedb?: never;
+}
+
+interface ISearchTVDB extends IBaseParams {
+  search_string?: never;
+  search_imdb?: never;
+  search_tvdb: string;
+  search_themoviedb?: never;
+}
+
+interface ISearchTMDB extends IBaseParams {
+  search_string?: never;
+  search_imdb?: never;
+  search_tvdb?: never;
+  search_themoviedb: string;
+}
+
+type ISearchParams = ISearchString | ISearchIMDB | ISearchTVDB | ISearchTMDB;
 
 interface ITorrentRecord {
   title: string;
@@ -164,6 +189,7 @@ export class NodeRarbg {
       params: {
         ...params,
         token: await this.fetchToken(),
+        format: "json_extended",
       },
     });
 
@@ -172,12 +198,9 @@ export class NodeRarbg {
 
   private async apiRequest<T>(params: object, cache = true) {
     if (cache) {
-      console.log("running cached request");
       const key = JSON.stringify(params);
-      console.log(key);
       const cachedResponse = this.cache.get(key);
       if (cachedResponse) {
-        console.log("using cache");
         return cachedResponse as T;
       } else {
         const data = await this.request<T>(params);
@@ -203,9 +226,21 @@ export class NodeRarbg {
   }
 
   async list(params?: IBaseParams) {
-    return { mode: "list", format: "json_extended", ...params };
+    return this.apiRequest<ITorrentRecords>({ mode: "list", ...params });
   }
   async search(params: ISearchParams) {
     return this.apiRequest<ITorrentRecords>({ mode: "search", ...params });
   }
 }
+
+const rarbg = new NodeRarbg({
+  app_id: "kraken",
+});
+
+(async () => {
+  console.log(
+    await rarbg.search({
+      search_imdb: "tt0101545",
+    })
+  );
+})();
