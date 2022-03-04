@@ -232,15 +232,3 @@ export class NodeRarbg {
     return this.apiRequest<ITorrentRecords>({ mode: "search", ...params });
   }
 }
-
-const rarbg = new NodeRarbg({
-  app_id: "kraken",
-});
-
-(async () => {
-  console.log(
-    await rarbg.search({
-      search_imdb: "tt0101545",
-    })
-  );
-})();
