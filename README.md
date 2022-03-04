@@ -1,1 +1,1 @@
-# rarbgapi
+# node-rarbg

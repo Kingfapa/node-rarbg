@@ -38,7 +38,7 @@ interface ITorrentRecords {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export class RarbgApi {
+export class NodeRarbg {
   instance: AxiosInstance;
   maxRetries: number;
 
@@ -209,9 +209,3 @@ export class RarbgApi {
     return this.apiRequest<ITorrentRecords>({ mode: "search", ...params });
   }
 }
-
-// (async () => {
-//   await rarbgapi.search({
-//     search_string: "Star Wars",
-//   })
-// })()

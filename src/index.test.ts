@@ -1,18 +1,18 @@
-import { RarbgApi } from "./index";
+import { NodeRarbg } from "./index";
 
 jest.setTimeout(20000);
 
-const rarbgapi = new RarbgApi({
+const rarbg = new NodeRarbg({
   app_id: "kraken_test",
   debug: true,
 });
 
 test("fetch token", async () => {
-  expect(await rarbgapi.fetchToken()).toMatch(/^\w{10}$/);
+  expect(await rarbg.fetchToken()).toMatch(/^\w{10}$/);
 });
 
 test("search for star wars", async () => {
-  const data = await rarbgapi.search({
+  const data = await rarbg.search({
     search_string: "Star Wars",
   });
   data.torrent_results.forEach((record) => {
