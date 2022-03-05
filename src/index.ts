@@ -66,8 +66,9 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export class NodeRarbg {
   instance: AxiosInstance;
   maxRetries: number;
+  useCache: boolean | undefined;
 
-  private cache: NodeCache;
+  private cache: NodeCache | undefined;
   private token?: string;
   private lastRequestTime?: number;
   private currentTries: number;
@@ -100,11 +101,13 @@ export class NodeRarbg {
 
   constructor({
     app_id,
+    useCache,
     debug,
     throttle,
     maxRetries,
   }: {
     app_id: string;
+    useCache: boolean;
     maxRetries?: number;
     debug?: boolean;
     throttle?: number;
@@ -116,7 +119,10 @@ export class NodeRarbg {
       },
     });
 
-    this.cache = new NodeCache();
+    if (useCache) {
+      this.useCache = useCache;
+      this.cache = new NodeCache();
+    }
 
     this.currentTries = 0;
     this.maxRetries = maxRetries || 10;
@@ -196,8 +202,8 @@ export class NodeRarbg {
     return data;
   }
 
-  private async apiRequest<T>(params: object, cache = true) {
-    if (cache) {
+  async apiRequest<T>(params: object) {
+    if (this.useCache && this.cache) {
       const key = JSON.stringify(params);
       const cachedResponse = this.cache.get(key);
       if (cachedResponse) {
